@@ -54,15 +54,44 @@
                     </p:column>
                     
                     <p:column>
-                        <p:commandButton type = "submit" title="Add Item To Cart" actionListener="#{shoppingCartJSFManagedBean.addItemToCart}">
+                        <p:commandButton type = "submit" title="Add Item To Cart" update="formAddQuantity" oncomplete="PF('dialogAddQuantity').show()" actionListener="#{shoppingCartJSFManagedBean.doAddItemToCart}">
                             <f:attribute name="itemAdded" value="#{productEntity}" />
-                            <p:outputLabel for="quantity" value="Quantity To Add: " style="font-weight: bold;" />
-                            <p:inputText id="quantity" title = "Quantity To Add: " value="#{shoppingCartJSFManagedBean.quantity}" required="true" requiredMessage="Quantity is required" />
                         </p:commandButton>                        
                     </p:column>
 
                 </p:dataTable>
                                 
+            </h:form>
+            
+            <h:form id="formAddQuantity" enctype="multipart/form-data">
+
+                <p:dialog id="dialogAddQuantity" widgetVar="dialogAddQuantity" header="Quantity To Add" closable="true" width="500" height="600">
+
+                    <p:messages id="messagesAddQuantity" redisplay="false" />
+                    <p:growl id="msgs" showDetail="true"/>
+
+                    <p:panelGrid>
+
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="quantity" value="Quantity: " />
+                            </p:column>
+                            <p:column>
+                                <p:inputText id = "quantity" value="#{shoppingCartJSFManagedBean.quantity}" required ="true" requiredMessage="Quantity is required"/>
+                            </p:column>
+                            <p:column>
+                                &nbsp;
+                            </p:column>
+                        </p:row>
+                        
+                        <p:row>
+                            <p:column colspan="2">
+                                <p:commandButton type="reset" value="Clear" />&nbsp;
+                                <p:commandButton  value="Submit" update="@form formMain:dataTableMain" actionListener="#{shoppingCartJSFManagedBean.addItemToCart}" oncomplete="PF('dialogAddQuantity').show();" ajax="false"/>
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
+                </p:dialog>
             </h:form>
             
             <ez:ViewProduct id="ccViewProduct" />

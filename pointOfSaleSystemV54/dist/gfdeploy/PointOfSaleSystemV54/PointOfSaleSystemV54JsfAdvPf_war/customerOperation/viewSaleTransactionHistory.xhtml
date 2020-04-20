@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/template/defaultTemplate.xhtml"
+                xmlns:ez="http://xmlns.jcp.org/jsf/composite/ezcomp"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+        
+        <div>
+            <h3>View Sale Transaction History</h3>                        
+
+            <h:form id="formMain">
+                
+                <p:dataTable id="dataTableMain" widgetVar="dataTableMain" value="#{saleTransactionManagedBean.saleTransactions}" var="saleTransaction" rowKey="#{saleTransaction.saleTransactionId}" rowIndexVar="row"                             
+                             rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
+                    
+                    <p:column headerText="Transaction ID" sortBy="#{saleTransaction.saleTransactionId}">
+                        <h:outputText value="#{saleTransaction.saleTransactionId}" />
+                    </p:column>
+
+                    <p:column headerText="Total Line Item" sortBy="#{saleTransaction.totalLineItem}">
+                        <h:outputText value="#{saleTransaction.totalLineItem}" />
+                    </p:column>                            
+
+                    <p:column headerText="Total Quantity" sortBy="#{saleTransaction.totalQuantity}">
+                        <h:outputText value="#{saleTransaction.totalQuantity}" />
+                    </p:column>
+                    
+                    <p:column headerText="Total Amount" sortBy="#{saleTransaction.totalAmount}">
+                        <h:outputText value="#{saleTransaction.totalAmount}" />
+                    </p:column>
+
+                    <p:column headerText="Transaction Date Time" sortBy="#{saleTransaction.transactionDateTime}">
+                        <h:outputText value="#{saleTransaction.transactionDateTime}" />
+                    </p:column>
+
+                    <p:column headerText="Void Refund" sortBy="#{saleTransaction.voidRefund}">
+                        <h:outputText value="#{saleTransaction.voidRefund}"/>
+                    </p:column>
+
+                </p:dataTable>
+                                
+            </h:form>
+            
+        </div>
+        
+    </ui:define>
+
+</ui:composition>

@@ -1,5 +1,6 @@
 package ejb.session.stateless;
 
+import entity.CustomerEntity;
 import entity.SaleTransactionEntity;
 import entity.SaleTransactionLineItemEntity;
 import entity.StaffEntity;
@@ -14,6 +15,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import util.exception.CreateNewSaleTransactionException;
+import util.exception.CustomerNotFoundException;
 import util.exception.ProductInsufficientQuantityOnHandException;
 import util.exception.ProductNotFoundException;
 import util.exception.SaleTransactionAlreadyVoidedRefundedException;
@@ -35,6 +37,8 @@ public class SaleTransactionEntitySessionBean implements SaleTransactionEntitySe
     
     @EJB
     private StaffEntitySessionBeanLocal staffEntitySessionBeanLocal;
+    @EJB
+    private CustomerEntitySessionBeanLocal customerEntitySessionBeanLocal;
     @EJB
     private ProductEntitySessionBeanLocal productEntitySessionBeanLocal;
     
@@ -59,6 +63,42 @@ public class SaleTransactionEntitySessionBean implements SaleTransactionEntitySe
                 StaffEntity staffEntity = staffEntitySessionBeanLocal.retrieveStaffByStaffId(staffId);
                 newSaleTransactionEntity.setStaffEntity(staffEntity);
                 staffEntity.getSaleTransactionEntities().add(newSaleTransactionEntity);
+
+                entityManager.persist(newSaleTransactionEntity);
+
+                for(SaleTransactionLineItemEntity saleTransactionLineItemEntity:newSaleTransactionEntity.getSaleTransactionLineItemEntities())
+                {
+                    productEntitySessionBeanLocal.debitQuantityOnHand(saleTransactionLineItemEntity.getProductEntity().getProductId(), saleTransactionLineItemEntity.getQuantity());
+                    entityManager.persist(saleTransactionLineItemEntity);
+                }
+
+                entityManager.flush();
+
+                return newSaleTransactionEntity;
+            }
+            catch(ProductNotFoundException | ProductInsufficientQuantityOnHandException ex)
+            {
+                // The line below rolls back all changes made to the database.
+                eJBContext.setRollbackOnly();
+                throw new CreateNewSaleTransactionException(ex.getMessage());
+            }
+        }
+        else
+        {
+            throw new CreateNewSaleTransactionException("Sale transaction information not provided");
+        }
+    }
+    
+    @Override
+    public SaleTransactionEntity customerCreateNewSaleTransaction(Long customerId, SaleTransactionEntity newSaleTransactionEntity) throws CustomerNotFoundException, CreateNewSaleTransactionException
+    {
+        if(newSaleTransactionEntity != null)
+        {
+            try
+            {
+                CustomerEntity customerEntity = customerEntitySessionBeanLocal.retrieveCustomerById(customerId);
+                newSaleTransactionEntity.setCustomerEntity(customerEntity);
+                customerEntity.getSaleTransactionEntities().add(newSaleTransactionEntity);
 
                 entityManager.persist(newSaleTransactionEntity);
 

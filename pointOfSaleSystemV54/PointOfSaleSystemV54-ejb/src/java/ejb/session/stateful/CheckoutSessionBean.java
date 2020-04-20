@@ -14,6 +14,7 @@ import javax.ejb.Stateful;
 import ejb.session.stateless.SaleTransactionEntitySessionBeanLocal;
 import javax.ejb.Remove;
 import util.exception.CreateNewSaleTransactionException;
+import util.exception.CustomerNotFoundException;
 import util.exception.StaffNotFoundException;
 
 
@@ -61,7 +62,7 @@ public class CheckoutSessionBean implements CheckoutSessionBeanLocal, CheckoutSe
     public BigDecimal addItem(ProductEntity productEntity, Integer quantity)
     {
         BigDecimal subTotal = productEntity.getUnitPrice().multiply(new BigDecimal(quantity));
-        
+ 
         ++totalLineItem;
         saleTransactionLineItemEntities.add(new SaleTransactionLineItemEntity(totalLineItem, productEntity, quantity, productEntity.getUnitPrice(), subTotal));
         totalQuantity += quantity;
@@ -76,6 +77,15 @@ public class CheckoutSessionBean implements CheckoutSessionBeanLocal, CheckoutSe
     public SaleTransactionEntity doCheckout(Long staffId) throws StaffNotFoundException, CreateNewSaleTransactionException
     {
         SaleTransactionEntity newSaleTransactionEntity = saleTransactionEntitySessionBeanLocal.createNewSaleTransaction(staffId, new SaleTransactionEntity(totalLineItem, totalQuantity, totalAmount, new Date(), saleTransactionLineItemEntities, false));
+        initialiseState();
+        
+        return newSaleTransactionEntity;
+    }
+    
+    @Override
+    public SaleTransactionEntity customerDoCheckout(Long customerId) throws CustomerNotFoundException, CreateNewSaleTransactionException
+    {
+        SaleTransactionEntity newSaleTransactionEntity = saleTransactionEntitySessionBeanLocal.customerCreateNewSaleTransaction(customerId, new SaleTransactionEntity(totalLineItem, totalQuantity, totalAmount, new Date(), saleTransactionLineItemEntities, false));
         initialiseState();
         
         return newSaleTransactionEntity;

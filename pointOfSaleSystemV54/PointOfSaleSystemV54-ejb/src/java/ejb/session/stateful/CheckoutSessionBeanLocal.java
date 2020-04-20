@@ -6,6 +6,7 @@ import entity.SaleTransactionLineItemEntity;
 import java.math.BigDecimal;
 import java.util.List;
 import util.exception.CreateNewSaleTransactionException;
+import util.exception.CustomerNotFoundException;
 import util.exception.StaffNotFoundException;
 
 
@@ -39,4 +40,6 @@ public interface CheckoutSessionBeanLocal
     BigDecimal getTotalAmount();
 
     void setTotalAmount(BigDecimal totalAmount);
+
+    public SaleTransactionEntity customerDoCheckout(Long customerId) throws CustomerNotFoundException, CreateNewSaleTransactionException;
 }

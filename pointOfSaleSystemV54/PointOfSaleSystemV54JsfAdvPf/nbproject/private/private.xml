@@ -3,8 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/Users/Kaijing/Documents/IS3106/PointOfSaleSystemV54/PointOfSaleSystemV54JsfAdvPf/web/index.xhtml</file>
-            <file>file:/Users/Kaijing/Documents/IS3106/PointOfSaleSystemV54/PointOfSaleSystemV54JsfAdvPf/src/java/jsf/managedbean/LoginManagedBean.java</file>
+            <file>file:/Users/Kaijing/Documents/IS3106/pointOfSalesSystemV54/pointOfSaleSystemV54/PointOfSaleSystemV54JsfAdvPf/web/mainmenu.xhtml</file>
+            <file>file:/Users/Kaijing/Documents/IS3106/pointOfSalesSystemV54/pointOfSaleSystemV54/PointOfSaleSystemV54JsfAdvPf/src/java/jsf/managedbean/shoppingCartJSFManagedBean.java</file>
+            <file>file:/Users/Kaijing/Documents/IS3106/pointOfSalesSystemV54/pointOfSaleSystemV54/PointOfSaleSystemV54JsfAdvPf/web/index.xhtml</file>
+            <file>file:/Users/Kaijing/Documents/IS3106/pointOfSalesSystemV54/pointOfSaleSystemV54/PointOfSaleSystemV54JsfAdvPf/web/customerOperation/browseAllProducts.xhtml</file>
         </group>
     </open-files>
 </project-private>
