@@ -13,7 +13,7 @@ import util.exception.StaffNotFoundException;
 public interface CheckoutSessionBeanRemote
 {
 
-    BigDecimal addItem(ProductEntity productEntity, Integer quantity);
+    List<BigDecimal> addItem(ProductEntity productEntity, Integer quantity);
     
     SaleTransactionEntity doCheckout(Long staffId) throws StaffNotFoundException, CreateNewSaleTransactionException;
 

@@ -44,58 +44,74 @@
         </nav>
             
     </section>
+        
+        <style type="text/css">
+            .ui-row-editor .ui-row-editor-pencil {
+        margin-left:8px;
+            }
+        </style>
     
-                <h:form id="formCheckout" enctype="multipart/form-data">
+    <h:form id="formCheckout" enctype="multipart/form-data">
+                    <p:growl id="msgs" showDetail="true"/>
             <p:dialog id = "shoppingCart" header="Current Shopping Cart" widgetVar="shoppingCart" closable="true" width="500" height="600">
-            <p:panelGrid id="dataTableCheckout" >
-<!--                <p:row>-->
-                    <!-- don't display the sale transactions yet -->
-<!--                    <p:column>
-                        <p:outputLabel for="Item" value="Items: " style="font-weight: bold;" />
+                <p:dataTable id="dataTableCheckout" editable="true" value="#{shoppingCartJSFManagedBean.currentProductEntities}" var="items" rowKey="#{items.productId}" sortBy="#{items.productId}">
+                    
+                    <f:facet name="header">
+                        Shopping Cart
+                    </f:facet>
+                    
+                    <p:ajax event="rowEdit" listener="#{shoppingCartJSFManagedBean.onRowEdit}" update=":formCheckout:msgs" />
+                    <p:ajax event="rowEditCancel" listener="#{shoppingCartJSFManagedBean.onRowCancel}" update=":formCheckout:msgs" />
+        
+                    <p:column headerText="Item Name: ">
+                        <h:outputText id="name" value="#{items.name}" />
                     </p:column>
-                    <p:column>
-                        <h:outputText id="Item" value="#{shoppingCartJSFManagedBean.saleTransactionLineItemEntities}" />
-                    </p:column>-->
-<!--                </p:row>-->
-                <p:row>
-                    <p:column>
-                        <p:outputLabel for="Subtotal" value="Subtotal of current product: " style="font-weight: bold;" />
+                    
+                    <p:column headerText="Item Quantity: ">
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <h:outputText value="#{shoppingCartJSFManagedBean.currQuantity(items)}" />
+                            </f:facet>
+                            <f:facet name="input">
+                                <p:inputText id="quantity" value="#{shoppingCartJSFManagedBean.currQuantity(items)}"/>
+                            </f:facet>
+                        </p:cellEditor>
                     </p:column>
-                    <p:column>
-                        <h:outputText id="Subtotal" value="#{shoppingCartJSFManagedBean.subTotal}" />
+                    
+                    <p:column headerText="Item Price: ">
+                        <h:outputText id="price" value="#{items.unitPrice}" />
                     </p:column>
-                </p:row>
-                <p:row>
-                    <p:column>
-                        <p:outputLabel for="totalLineItem" value="Total Line Items: " style="font-weight: bold;" />
-                    </p:column>
-                    <p:column>
-                        <h:outputText id="totalLineItem" value="#{shoppingCartJSFManagedBean.totalLineItem}" />
-                    </p:column>
-                </p:row>
-                <p:row>
-                    <p:column>
-                        <p:outputLabel for="totalQuantity" value="Total Quantity: " style="font-weight: bold;" />
-                    </p:column>
-                    <p:column>
-                        <h:outputText id="totalQuantity" value="#{shoppingCartJSFManagedBean.totalQuantity}" />
-                    </p:column>
-                </p:row>
-                <p:row>
-                    <p:column>
-                        <p:outputLabel for="totalAmount" value="Total Amount: " style="font-weight: bold;"/>
-                    </p:column>
-                    <p:column>
-                        <h:outputText id="totalAmount" value="#{shoppingCartJSFManagedBean.totalAmount}" />
-                    </p:column>
-                </p:row>
-                
-                <p:row>
-                            <p:column colspan="1">
-                                <p:commandButton  value="Checkout" update="@form formCheckout:dataTableCheckout" actionListener="#{shoppingCartJSFManagedBean.checkout}" ajax="false"/>
-                            </p:column>
+                    
+                    
+                    <p:summaryRow >
+                        <p:column colspan="2" style="text-align:right">
+                            <h:outputText value="Item SubTotal: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{shoppingCartJSFManagedBean.currSubTotal(items)}"/>
+                        </p:column>
+                    </p:summaryRow>
+                    
+                    <p:columnGroup type="footer">
+                        <p:row>
+                            <p:column colspan="2" footerText="Total Line Item: "/>
+                            <p:column footerText="#{shoppingCartJSFManagedBean.totalLineItem}" />
                         </p:row>
-            </p:panelGrid>
+                        <p:row>
+                            <p:column colspan="2" footerText="Total Quantity: "/>
+                            <p:column footerText="#{shoppingCartJSFManagedBean.totalQuantity}" />
+                        </p:row>
+                        <p:row>
+                            <p:column colspan="2" footerText="Total Amount: "/>
+                            <p:column footerText="#{shoppingCartJSFManagedBean.totalAmount}" />
+                        </p:row>
+                    </p:columnGroup>
+            </p:dataTable>
+            <p:row>
+                <p:column colspan="1">
+                   <p:commandButton  value="Checkout" update="@form formCheckout:dataTableCheckout" actionListener="#{shoppingCartJSFManagedBean.checkout}" ajax="false"/>
+                </p:column>
+            </p:row>
         </p:dialog>
             </h:form>
 </ui:composition>

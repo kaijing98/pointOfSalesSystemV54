@@ -140,7 +140,7 @@ public class CashierOperationModule
                 
                 if(quantity > 0)
                 {
-                    BigDecimal subTotal = checkoutBeanRemote.addItem(productEntity, quantity);
+                    List<BigDecimal> subTotal = checkoutBeanRemote.addItem(productEntity, quantity);
                     System.out.println(productEntity.getName() + " added successfully!: " + quantity + " unit @ " + NumberFormat.getCurrencyInstance().format(subTotal) + "\n");
                 }
                 else

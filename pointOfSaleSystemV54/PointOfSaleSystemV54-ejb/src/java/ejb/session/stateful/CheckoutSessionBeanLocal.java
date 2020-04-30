@@ -17,7 +17,7 @@ public interface CheckoutSessionBeanLocal
     
     
     
-    BigDecimal addItem(ProductEntity productEntity, Integer quantity);
+    List<BigDecimal> addItem(ProductEntity productEntity, Integer quantity);
     
     SaleTransactionEntity doCheckout(Long staffId) throws StaffNotFoundException, CreateNewSaleTransactionException;
 
@@ -42,4 +42,16 @@ public interface CheckoutSessionBeanLocal
     void setTotalAmount(BigDecimal totalAmount);
 
     public SaleTransactionEntity customerDoCheckout(Long customerId) throws CustomerNotFoundException, CreateNewSaleTransactionException;
+
+    public List<ProductEntity> getCurrentProductEntities();
+
+    public void setCurrentProductEntities(List<ProductEntity> currentProductEntities);
+
+    public List<Integer> getCurrentProductQuantity();
+
+    public void setCurrentProductQuantity(List<Integer> currentProductQuantity);
+
+    public List<BigDecimal> getSubTotalArr();
+
+    public void setSubTotalArr(List<BigDecimal> subTotalArr);
 }

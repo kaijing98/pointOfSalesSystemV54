@@ -127,7 +127,7 @@ public class SaleTransactionEntityWebService
     
     
     @WebMethod(operationName = "serverStateRemoteAddItem")
-    public BigDecimal serverStateRemoteAddItem(@WebParam(name = "username") String username, 
+    public List<BigDecimal> serverStateRemoteAddItem(@WebParam(name = "username") String username, 
                                                 @WebParam(name = "password") String password,
                                                 @WebParam(name = "sessionKey") String sessionKey,
                                                 @WebParam(name = "remoteCheckoutLineItem") RemoteCheckoutLineItem remoteCheckoutLineItem)

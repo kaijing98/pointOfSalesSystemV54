@@ -20,6 +20,7 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import org.primefaces.event.RowEditEvent;
 import util.exception.CreateNewSaleTransactionException;
 import util.exception.CustomerNotFoundException;
 
@@ -40,15 +41,20 @@ public class shoppingCartJSFManagedBean implements Serializable {
     private Integer totalLineItem;    
     private Integer totalQuantity;    
     private BigDecimal totalAmount; 
-    private BigDecimal subTotal;
+    private List<BigDecimal> subTotal;
+    private List<ProductEntity> currentProductEntities;
+    private List<Integer> currentProductQuantity;
+    private Integer currQuantity;
     
         
     public shoppingCartJSFManagedBean() {
         saleTransactionLineItemEntities = new ArrayList<>();
+        currentProductEntities = new ArrayList<>();
+        currentProductQuantity = new ArrayList<>();
         totalLineItem = 0;
         totalQuantity = 0;
         totalAmount = new BigDecimal("0.00");
-        subTotal = new BigDecimal("0.00");
+        subTotal = new ArrayList<>();
     }
     
     @PostConstruct
@@ -60,13 +66,34 @@ public class shoppingCartJSFManagedBean implements Serializable {
         productAdded = (ProductEntity)event.getComponent().getAttributes().get("itemAdded");
     }
     
+    public void onRowEdit(RowEditEvent event) {
+        FacesMessage msg = new FacesMessage("Quantity Edited", null);
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
+     
+    public void onRowCancel(RowEditEvent event) {
+        FacesMessage msg = new FacesMessage("Edit Cancelled", null);
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
+    
     public void addItemToCart(ActionEvent event) {
-        setSubTotal(checkoutSessionBeanLocal.addItem(productAdded, quantity));
+        subTotal = checkoutSessionBeanLocal.addItem(productAdded, quantity);
+        currentProductEntities = checkoutSessionBeanLocal.getCurrentProductEntities();
+        currentProductQuantity = checkoutSessionBeanLocal.getCurrentProductQuantity();
         totalLineItem = checkoutSessionBeanLocal.getTotalLineItem();
         totalQuantity = checkoutSessionBeanLocal.getTotalQuantity();
         totalAmount = checkoutSessionBeanLocal.getTotalAmount();
-        subTotal = getSubTotal();
         saleTransactionLineItemEntities = checkoutSessionBeanLocal.getSaleTransactionLineItemEntities();
+    }
+    
+    public Integer currQuantity(ProductEntity currProduct) {
+        Integer index = currentProductEntities.indexOf(currProduct);
+        return currentProductQuantity.get(index);
+    }
+    
+    public BigDecimal currSubTotal(ProductEntity currProduct) {
+        Integer index = currentProductEntities.indexOf(currProduct);
+        return subTotal.get(index);
     }
     
     public void checkout(ActionEvent event) {
@@ -76,7 +103,9 @@ public class shoppingCartJSFManagedBean implements Serializable {
             totalLineItem = checkoutSessionBeanLocal.getTotalLineItem();
             totalQuantity = checkoutSessionBeanLocal.getTotalQuantity();
             totalAmount = checkoutSessionBeanLocal.getTotalAmount();
-            subTotal = new BigDecimal("0.00");
+            subTotal = checkoutSessionBeanLocal.getSubTotalArr();
+            currentProductEntities = checkoutSessionBeanLocal.getCurrentProductEntities();
+            currentProductQuantity = checkoutSessionBeanLocal.getCurrentProductQuantity();
         } catch (CustomerNotFoundException | CreateNewSaleTransactionException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error has occurred while checking out: " + ex.getMessage(), null));
         }
@@ -169,14 +198,56 @@ public class shoppingCartJSFManagedBean implements Serializable {
     /**
      * @return the subTotal
      */
-    public BigDecimal getSubTotal() {
+    public List<BigDecimal> getSubTotal() {
         return subTotal;
     }
 
     /**
      * @param subTotal the subTotal to set
      */
-    public void setSubTotal(BigDecimal subTotal) {
+    public void setSubTotal(List<BigDecimal> subTotal) {
         this.subTotal = subTotal;
+    }
+
+    /**
+     * @return the currentProductEntities
+     */
+    public List<ProductEntity> getCurrentProductEntities() {
+        return currentProductEntities;
+    }
+
+    /**
+     * @param currentProductEntities the currentProductEntities to set
+     */
+    public void setCurrentProductEntities(List<ProductEntity> currentProductEntities) {
+        this.currentProductEntities = currentProductEntities;
+    }
+
+    /**
+     * @return the currentProductQuantity
+     */
+    public List<Integer> getCurrentProductQuantity() {
+        return currentProductQuantity;
+    }
+
+    /**
+     * @param currentProductQuantity the currentProductQuantity to set
+     */
+    public void setCurrentProductQuantity(List<Integer> currentProductQuantity) {
+        this.currentProductQuantity = currentProductQuantity;
+    }
+
+    /**
+     * @return the currQuantity
+     */
+    public Integer getCurrQuantity() {
+        return currQuantity;
+    }
+
+    /**
+     * @param currQuantity the currQuantity to set
+     */
+    public void setCurrQuantity(Integer currQuantity) {
+        this.currQuantity = currQuantity;
     }
 }
