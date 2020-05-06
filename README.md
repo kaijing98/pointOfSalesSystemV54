@@ -17,10 +17,10 @@ In addition, the following three use cases on searching and filtering of product
 Deploy the enterprise application and then open your web browser and navigate to this URL – http://localhost:8080/PointOfSaleSystemV54JsfAdvPf – to test the JSF web application. Altogether, ten use cases have been realised, including Login, Logout, View All Products and View Product Details.
 
 In addition, the following use cases have been added using JSF and the PrimeFaces component suite:
-• Register as Customer, Login and Logout
-• Browse All Products
-• Add Product to Shopping Cart and Update Product Quantity to Purchase in Shopping
+* Register as Customer, Login and Logout
+* Browse All Products
+* Add Product to Shopping Cart and Update Product Quantity to Purchase in Shopping
 Cart
-• Checkout Shopping Cart
-• View Sale Transactions History
+* Checkout Shopping Cart
+* View Sale Transactions History
 
